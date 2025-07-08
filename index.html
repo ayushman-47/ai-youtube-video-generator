@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI YouTube Video Generator</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
+  <div class="bg-white shadow-lg rounded-xl p-8 max-w-md w-full">
+    <h2 class="text-2xl font-bold mb-4 text-center text-gray-800">
+      🎬 AI YouTube Video Generator
+    </h2>
+
+    <label for="prompt" class="block text-gray-600 mb-2 font-medium">Enter your video topic:</label>
+    <input type="text" id="prompt" placeholder="e.g., How solar panels work"
+      class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none mb-4" />
+
+    <button onclick="sendPrompt()"
+      class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-all">
+      Generate Video
+    </button>
+
+    <p id="response" class="mt-4 text-sm text-gray-700 text-center">Waiting for your input...</p>
+  </div>
+
+  <script>
+    async function sendPrompt() {
+      const prompt = document.getElementById("prompt").value.trim();
+      const responseBox = document.getElementById("response");
+
+      if (!prompt) {
+        responseBox.innerText = "❗ Please enter a topic.";
+        return;
+      }
+
+      responseBox.innerHTML = "⏳ Generating your video... please wait.";
+
+      try {
+        const res = await fetch("/api/prompt", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ prompt }),
+        });
+
+        const data = await res.json();
+        if (data.videoUrl) {
+          responseBox.innerHTML = `✅ Your video is ready: <br><a href="${data.videoUrl}" target="_blank" class="text-blue-600 underline">Watch Video</a>`;
+        } else {
+          responseBox.innerHTML = "⚠️ Error: No video URL received.";
+        }
+      } catch (error) {
+        responseBox.innerHTML = "❌ Something went wrong. Please try again later.";
+      }
+    }
+  </script>
+</body>
+</html>
