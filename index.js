@@ -12,7 +12,7 @@ app.use(express.static(__dirname));
 app.post("/api/prompt", async (req, res) => {
   const { prompt } = req.body;
 
-  const makeRes = await fetch("https://hook.us2.make.com/7849mbp5fw614r1bqq95jd6lgdwwg208", {
+  const makeRes = await fetch("https://hook.us2.make.com/3lc52acgcpcg6dvoy441sygniftcf7m2", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ prompt }),
